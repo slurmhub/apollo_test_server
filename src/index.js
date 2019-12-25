@@ -2,34 +2,29 @@ const { ApolloServer, gql } = require("apollo-server");
 
 const typeDefs = gql`
   type Query {
-    greetings: [String]!
+    items: [String]!
   }
 
   type Mutation {
-    addGreeting(greeting: String!): String!
-    clearGreetings: String
+    pushItem: String!): Int!
+    popItem: String
   }
 `;
 
-const greetings = ["hello", "hey", "hi"];
+const items = ["apple", "bed"];
 
 const resolvers = {
   Query: {
-    greetings: () => greetings
+    greetings: () => items
   },
   Mutation: {
-    addGreeting: (root, { greeting }) => greetings.push(greeting) && greeting,
-    clearGreetings: () => {
-      while (greetings.length > 0) {
-        greetings.pop();
-      }
-      return "done.";
-    }
+    addGreeting: (root, { greeting }) => items.push(greeting) && items.length,
+    clearGreeting: () => items.length && items.pop()
   }
 };
 
 const server = new ApolloServer({ typeDefs, resolvers });
 
 server.listen().then(({ url }) => {
-  console.log(`Server ready at ${url}`);
+  console.log(`Itemserver ready at ${url}`);
 });
